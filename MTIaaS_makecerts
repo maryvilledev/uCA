@@ -1,0 +1,25 @@
+#!/bin/bash
+canonical_readlink () {
+    # OS X doesn't ship with GNU readlink.
+    cd $(dirname $1);
+    __filename=$(basename $1);
+    if [ -h "$__filename" ]; then
+        canonical_readlink $(readlink $__filename$);
+    else
+        echo "$(pwd -P)";
+    fi
+}
+
+realdir=$(canonical_readlink $0)
+
+. ${realdir}/uCA-utils.sh
+
+init_globals
+pushd ${realdir} >/dev/null
+make_file_structure
+generate_CA
+for i in etcd cb rmq ibuiserver; do
+    make_cert ${i} server
+done
+make_cert client client
+popd > /dev/null

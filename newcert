@@ -1,0 +1,26 @@
+#!/bin/bash
+canonical_readlink () {
+    # OS X doesn't ship with GNU readlink.
+    cd $(dirname $1);
+    __filename=$(basename $1);
+    if [ -h "$__filename" ]; then
+        canonical_readlink $(readlink $__filename$);
+    else
+        echo "$(pwd -P)";
+    fi
+}
+
+realdir=$(canonical_readlink $0)
+. ${realdir}/uCA-utils.sh
+
+ppf="${realdir}/private/cakey.passphrase"
+if ! [ -f ${ppf} ]; then
+    echo "No CA passphrase in ${ppf}!"
+    exit 2
+fi
+CA_PASSPHRASE=$(cat ${ppf})
+
+init_globals
+pushd ${realdir} >/dev/null
+make_cert $1
+popd > /dev/null
