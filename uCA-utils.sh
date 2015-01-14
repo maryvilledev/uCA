@@ -77,24 +77,28 @@ function create_key () {
 
 function create_csr () {
     local cn=$1
-    local subj=$(build_subj ${cn})
+    subj=""
+    san=""
+    build_subj_and_san ${cn}
     csr="csrs/${cn}.csr"
     touch ${csr}
     chmod 0644 ${csr}
+    export SAN=$"DNS:${san}"
     openssl req ${cfg} -new -key private/${cn}.key -out csrs/${cn}.csr \
-	-batch -subj "${subj}" -passin pass: -batch
+     -batch -subj "${subj}" -passin pass: -batch
+    unset SAN
     chmod 0444 ${csr}
 }
 
-function build_subj () {
+function build_subj_and_san () {
     local CN=$1
     local C=$(read_config "countryName_default")
     local ST=$(read_config "stateOrProvinceName_default")
     local L=$(read_config "localityName_default")
     local O=$(read_config "0.organizationName_default")
     local OU=$(read_config "organizationalUnitName_default")
-    local subj="/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}"
-    echo ${subj}
+    subj="/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}"
+    san=$(echo $CN | sed -e 's/[[:digit:]]$//' )
 }
 
 function read_config () {

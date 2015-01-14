@@ -3,6 +3,8 @@
 # This is mostly being used for generation of certificate requests.
 #
 
+# SAN must be defined here, so we throw it a dummy address
+SAN                    = "email:devnull@example.com"
 # This definition stops the following lines choking if HOME isn't
 # defined.
 HOME			= .
@@ -119,7 +121,7 @@ x509_extensions	= v3_ca	# The extentions to add to the self signed cert
 # WARNING: ancient versions of Netscape crash on BMPStrings or UTF8Strings.
 string_mask = utf8only
 
-# req_extensions = v3_req # The extensions to add to a certificate request
+req_extensions = v3_req # The extensions to add to a certificate request
 
 [ req_distinguished_name ]
 countryName			= Country Name (2 letter code)
@@ -157,6 +159,7 @@ challengePassword_min		= 4
 challengePassword_max		= 20
 
 unstructuredName		= An optional company name
+subjectAltName                  = Alternative certificate names
 
 [ srvr_cert ]
 
@@ -201,6 +204,7 @@ extendedKeyUsage = clientAuth
 
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = ${ENV::SAN}
 
 [ v3_ca ]
 

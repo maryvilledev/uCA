@@ -18,7 +18,7 @@ init_globals
 pushd ${realdir} >/dev/null
 make_file_structure
 generate_CA
-for i in etcd cb rmq ibuiserver; do
+for i in etcd1 etcd2 cb rmq ibuiserver; do
     make_cert ${i} server
 done
 make_cert client client
