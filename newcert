@@ -22,5 +22,5 @@ CA_PASSPHRASE=$(cat ${ppf})
 
 init_globals
 pushd ${realdir} >/dev/null
-make_cert $1 server
+make_cert $1 both
 popd > /dev/null

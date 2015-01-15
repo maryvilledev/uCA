@@ -5,6 +5,7 @@
 
 # SAN must be defined here, so we throw it a dummy address
 SAN                    = "email:devnull@example.com"
+
 # This definition stops the following lines choking if HOME isn't
 # defined.
 HOME			= .
@@ -57,9 +58,10 @@ crl		= $dir/crl.pem 		# The current CRL
 private_key	= $dir/private/ca.key   # The private key
 RANDFILE	= $dir/private/.rand	# private random number file
 
-x509_extensions	= usr_cert		# The extensions to add to the
+x509_extensions	= both_cert		# The extensions to add to the
                                         #  cert.  By default, we get a
-					#  client cert.
+					#  cert usable for both client
+					#  and server usage.
 
 name_opt 	= ca_default		# Subject Name options
 cert_opt 	= ca_default		# Certificate field options
@@ -184,7 +186,6 @@ authorityKeyIdentifier=keyid,issuer
 
 [ usr_cert ]
 
-
 basicConstraints=CA:FALSE
 # This is typical in keyUsage for a client certificate.
 nsCertType                      = client
@@ -192,6 +193,22 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 
 # This will be displayed in Netscape's comment listbox.
 nsComment			= "MTIaas autogen client certificate"
+
+# PKIX recommendations harmless if included in all certificates.
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+extendedKeyUsage = clientAuth
+
+[ both_cert ]
+
+basicConstraints=CA:FALSE
+# This is for something (like the ibuiserver) that is both an SSL client
+#  and and SSL server
+
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+# This will be displayed in Netscape's comment listbox.
+nsComment			= "MTIaas autogen client/server certificate"
 
 # PKIX recommendations harmless if included in all certificates.
 subjectKeyIdentifier=hash

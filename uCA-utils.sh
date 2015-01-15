@@ -61,9 +61,10 @@ function generate_CA () {
 
 function make_cert () {
     local cn=$1
+    local ctype=$2
     create_key ${cn}
     create_csr ${cn}
-    sign_csr ${cn}
+    sign_csr ${cn} ${ctype}
 }
 
 function create_key () {
@@ -118,6 +119,9 @@ function sign_csr () {
     case $ctype in
 	client )
 	    ct="usr_cert"
+	    ;;
+	both )
+	    ct="both_cert"
 	    ;;
 	* )
 	    ;;
