@@ -1,33 +1,27 @@
 #!/bin/bash
 # Bash makes echo's behavior the same on OS X and Linux, while sh differs
-canonical_readlink () {
-    # OS X doesn't ship with GNU readlink.
-    cd $(dirname $1);
-    __filename=$(basename $1);
-    if [ -h "$__filename" ]; then
-        canonical_readlink $(readlink $__filename$);
-    else
-        echo "$(pwd -P)";
-    fi
-}
 
 function init_globals () {
     # Globals
     # Do we have CA_PASSPHRASE defined in the environment already?
+    if [ -z ${cadir} ]; then
+	echo 1>&2 "CA directory is not set!  Cannot continue."
+	exit 2
+    fi
     if [ -z "${CA_PASSPHRASE}" ]; then
 	pp=$(openssl rand -hex 32)
     else 
 	pp="${CA_PASSPHRASE}"
     fi
-    ocf="${realdir}/openssl.cnf"
+    ocf="${cadir}/openssl.cnf"
     cfg="-config ${ocf}"
-    cakey="${realdir}/private/ca.key"
-    cacert="${realdir}/certs/ca.crt"
+    cakey="${cadir}/private/ca.key"
+    cacert="${cadir}/certs/ca.crt"
 }
 
 function make_file_structure () {
     destroy_file_structure
-    pushd ${realdir} >/dev/null
+    pushd ${cadir} >/dev/null
     mkdir certs crl csrs newcerts private
     chmod 0700 private
     touch index.txt crlnumber
@@ -36,7 +30,7 @@ function make_file_structure () {
 }
 
 function destroy_file_structure () {
-    pushd ${realdir} >/dev/null
+    pushd ${cadir} >/dev/null
     rm -rf certs crl crl.pem csrs newcerts private index.txt crlnumber \
 	index.txt.attr index.txt.attr.old serial serial.old index.txt.old \
 	2>/dev/null
@@ -69,7 +63,7 @@ function make_cert () {
 
 function create_key () {
     local cn=$1
-    local f="private/${cn}.key"
+    local f="${cadir}/private/${cn}.key"
     touch ${f}
     chmod 0600 ${f}
     openssl genrsa -out ${f} 4096
@@ -81,7 +75,7 @@ function create_csr () {
     subj=""
     san=""
     build_subj_and_san ${cn}
-    csr="csrs/${cn}.csr"
+    csr="${cadir}/csrs/${cn}.csr"
     touch ${csr}
     chmod 0644 ${csr}
     export SAN=$"DNS:${san}"
@@ -127,13 +121,13 @@ function sign_csr () {
 	    ;;
     esac
 
-    local cert="certs/${cn}.crt"
+    local cert="${cadir}/certs/${cn}.crt"
     touch ${cert}
     chmod 0644 ${cert}
     export PP=${pp}
     openssl ca ${cfg} -keyfile ${cakey} -cert ${cacert} -extensions ${ct} \
-	-notext -md sha256 -in csrs/${cn}.csr -out certs/${cn}.crt \
-	-key ${PP} -batch
+	-notext -md sha256 -in ${cadir}/csrs/${cn}.csr \
+	-out ${cadir}/certs/${cn}.crt -key ${PP} -batch
     unset PP
     chmod 0444 ${cert}
 }

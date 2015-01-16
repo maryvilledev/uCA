@@ -1,0 +1,36 @@
+#!/bin/bash
+function canonical_readlink () {
+    # OS X doesn't ship with GNU readlink.
+    # Adapted from martialboniou: 
+    # https://gist.github.com/martialboniou/1594712
+    cd $(dirname $1) 2>/dev/null
+    local rc=$?
+    if [ ${rc} -ne 0 ]; then
+	echo 2>&1 "No such directory $d"
+	echo ""
+    else
+	__filename=$(basename $1);
+	if [ -h "$__filename" ]; then
+            canonical_readlink $(readlink ${__filename});
+	else
+            echo "$(pwd -P)/${__filename}";
+	fi
+    fi
+}
+
+scriptdir=$(dirname $(canonical_readlink $0))
+cadir=$(dirname ${scriptdir})
+
+. ${scriptdir}/uCA-utils.sh
+
+ppf="${cadir}/private/cakey.passphrase"
+if ! [ -f ${ppf} ]; then
+    echo "No CA passphrase in ${ppf}!"
+    exit 2
+fi
+CA_PASSPHRASE=$(<${ppf})
+
+init_globals
+pushd ${cadir} >/dev/null
+make_cert $1 both
+popd > /dev/null
