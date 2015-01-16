@@ -78,7 +78,7 @@ function create_csr () {
     csr="${cadir}/csrs/${cn}.csr"
     touch ${csr}
     chmod 0644 ${csr}
-    export SAN=$"DNS:${san}"
+    export SAN="DNS:${san}"
     openssl req ${cfg} -new -key private/${cn}.key -out csrs/${cn}.csr \
      -batch -subj "${subj}" -passin pass: -batch
     unset SAN
