@@ -21,7 +21,7 @@ function canonical_readlink () {
 scriptdir=$(dirname $(canonical_readlink $0))
 cadir=$(dirname ${scriptdir})
 
-. ${cadir}/uCA-utils.sh
+. ${scriptdir}/uCA-utils.sh
 
 init_globals
 pushd ${cadir} >/dev/null
