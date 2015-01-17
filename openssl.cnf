@@ -70,6 +70,7 @@ cert_opt 	= ca_default		# Certificate field options
 # so this is commented out by default to leave a V1 CRL.
 # crlnumber must also be commented out to leave a V1 CRL.
 # crl_extensions	= crl_ext
+copy_extensions = copy
 
 default_days	= 420			# how long to certify for
 default_crl_days= 30			# how long before next CRL
@@ -108,7 +109,7 @@ default_bits		= 4096
 default_keyfile 	= privkey.pem
 distinguished_name	= req_distinguished_name
 attributes		= req_attributes
-x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+x509_extensions	= v3_req # The extentions to add to the self signed cert
 
 # Passwords for private keys if not present they will be prompted for
 # input_password = secret

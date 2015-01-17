@@ -81,6 +81,11 @@ preserve	= no			# keep passed DN ordering
 # and supplied fields are just that :-)
 policy		= policy_match
 
+#
+# You need this if you want your SAN copied into the resulting cert.
+#
+copy_extensions = copy
+
 # For the CA policy
 [ policy_match ]
 countryName		= match
@@ -108,7 +113,7 @@ default_bits		= 4096
 default_keyfile 	= privkey.pem
 distinguished_name	= req_distinguished_name
 attributes		= req_attributes
-x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+x509_extensions	= v3_req # The extentions to add to the self signed cert
 
 # Passwords for private keys if not present they will be prompted for
 # input_password = secret

@@ -80,7 +80,7 @@ function create_csr () {
     chmod 0644 ${csr}
     export SAN="DNS:${san}"
     openssl req ${cfg} -new -key private/${cn}.key -out csrs/${cn}.csr \
-     -batch -subj "${subj}" -passin pass: -batch
+     -subj "${subj}" -passin pass: -batch
     unset SAN
     chmod 0444 ${csr}
 }
