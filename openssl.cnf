@@ -184,6 +184,7 @@ nsComment			= "MTIaaS autogen server certificate"
 # PKIX recommendations harmless if included in all certificates.
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid,issuer
+extendedKeyUsage=serverAuth
 
 [ usr_cert ]
 
@@ -214,7 +215,7 @@ nsComment			= "MTIaas autogen client/server certificate"
 # PKIX recommendations harmless if included in all certificates.
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid,issuer
-extendedKeyUsage = clientAuth
+extendedKeyUsage = clientAuth,serverAuth
 
 [ v3_req ]
 

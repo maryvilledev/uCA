@@ -32,5 +32,5 @@ CA_PASSPHRASE=$(<${ppf})
 
 init_globals
 pushd ${cadir} >/dev/null
-make_cert $1 both
+make_cert $1 $2
 popd > /dev/null

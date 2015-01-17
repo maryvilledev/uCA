@@ -19,7 +19,7 @@ function canonical_readlink () {
 }
 
 scriptdir=$(dirname $(canonical_readlink $0))
-cadir=$(dirname $(scriptdir))
+cadir=$(dirname ${scriptdir})
 
 . ${scriptdir}/uCA-utils.sh
 
