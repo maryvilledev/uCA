@@ -51,7 +51,7 @@ Next, start running the things in scripts.
 * If on the other hand you want to do all your certs at once, use build_collection and feed it a list of cert names.  You may want to change "both" (for the cert usage) in that script.
 * Currently, SAN generation is controlled in the function build_subj_and_san in uCA-utils.sh ; edit this to change the rules I'm using (which are to make anything with trailing digits also accept the same name with no digits).  This function is likely to get broken out into its own file soon.
 
-# Bene/valediction
+## Bene/valediction
 I hope you find uCA as useful as I have!
 
 Adam
