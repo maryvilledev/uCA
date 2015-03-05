@@ -1,6 +1,10 @@
 # uCA
 uCA is a micro-CA that uses OpenSSL to allow you to easily create signed certificates with multiple SubjectAltNames
 
+## tl;dr
+
+Teeny tiny CA that lets you do algorithmically-determined SubjectAltNames, and which runs just fine on CoreOS, in case, I dunno, you need some way for a bunch of Docker containers to talk securely to each other.
+
 ## Why
 
 Have you ever tried to sign certificates with SubjectAltNames using OpenSSL's CA?  It's a gigantic pain.
@@ -27,6 +31,8 @@ Dogtag is cool, but it proved to be too hard for me to separate from the rest of
 
 EJBCA and OpenCA are way, *way*, **way** too big and complex and featureful for what I wanted to do.
 
+CoreOS already has OpenSSL and bash on it.  This, therefore, runs fine on CoreOS, which is where I happen to be doing most of my Docker deployment.
+
 ## What
 
 So I dug through a whole bunch of conflicting web pages, and played with how OpenSSL interacts with the environment, and eventually I came up with a set of recipes that use a grotesque and finicky dance between openssl.cnf and its environment to let you programmatically generate SANs for your certs and sign 'em.
@@ -45,4 +51,7 @@ Next, start running the things in scripts.
 * If on the other hand you want to do all your certs at once, use build_collection and feed it a list of cert names.  You may want to change "both" (for the cert usage) in that script.
 * Currently, SAN generation is controlled in the function build_subj_and_san in uCA-utils.sh ; edit this to change the rules I'm using (which are to make anything with trailing digits also accept the same name with no digits).  This function is likely to get broken out into its own file soon.
 
+# Bene/valediction
 I hope you find uCA as useful as I have!
+
+Adam
